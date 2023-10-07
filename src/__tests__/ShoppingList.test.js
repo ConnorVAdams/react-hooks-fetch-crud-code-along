@@ -90,6 +90,7 @@ test("removes an item from the list when the delete button is clicked", async ()
   expect(yogurt).toBeInTheDocument();
 
   const deleteButtons = await screen.findAllByText(/Delete/);
+  console.log(deleteButtons.length)
   fireEvent.click(deleteButtons[0]);
 
   await waitForElementToBeRemoved(() => screen.queryByText(/Yogurt/));

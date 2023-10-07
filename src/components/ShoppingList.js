@@ -11,10 +11,31 @@ function ShoppingList() {
     fetch('http://localhost:4000/items')
     .then(resp => resp.json())
     .then(data => setItems(data))
-  })
+  }, [])
 
-  function handleCategoryChange(category) {
+  function onCategoryChange(category) {
     setSelectedCategory(category);
+  }
+
+  const onAddItem = (itemData) => {
+    const updatedItems = [...items, itemData]
+    setItems(updatedItems)
+  }
+
+  const onAddToCart = (itemData) => {
+    const updatedItems = items.map(item => {
+      if (item.id === itemData.id) {
+        return itemData
+      } else {
+        return item
+      }
+    })
+    setItems(updatedItems)
+  }
+
+  const onRemoveFromList = (id) => {
+    const updatedItems = items.filter(item => item.id !== id)
+    setItems(updatedItems)
   }
 
   const itemsToDisplay = items.filter((item) => {
@@ -25,14 +46,14 @@ function ShoppingList() {
 
   return (
     <div className="ShoppingList">
-      <ItemForm />
+      <ItemForm onAddItem={onAddItem}/>
       <Filter
         category={selectedCategory}
-        onCategoryChange={handleCategoryChange}
+        onCategoryChange={onCategoryChange}
       />
       <ul className="Items">
         {itemsToDisplay.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item onRemoveFromList={onRemoveFromList} onAddToCart={onAddToCart} key={item.id} item={item} />
         ))}
       </ul>
     </div>
